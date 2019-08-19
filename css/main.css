@@ -134,3 +134,10 @@ body {
 	width: 100%;
 
 }
+
+.food {
+	height:100%;
+	width:100%;
+	background:url('../img/sausage.jpg');
+	background-size:cover;
+}

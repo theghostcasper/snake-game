@@ -2,27 +2,35 @@
 let Game = () => {
 	let gameSpeed = 100; /* ms */ 
 	/* Game Play handler */
-	let gamePlay;
+	let gamePlay,timer;
+	let playCache
 
-
-	function changeSpeed(speed) {
-		gameSpeed = speed;
+	function upSpeed(speed) {
+		gameSpeed -= speed;
+		clearInterval(gamePlay)
+		startGame(playCache);
 	}
 
 	function startGame(play) {
+		playCache = play
 		gamePlay = setInterval(function(){
 			play();
 		},gameSpeed)
 	}
-
+	function gameTimer(handler) {
+		timer = setInterval(function() {
+			handler();
+		},4000)
+	}
 	function stopGame() {
 		clearInterval(gamePlay);
 	}
 
 	return {
 		startGame,
-		changeSpeed,
-		stopGame
+		stopGame,
+		gameTimer,
+		upSpeed
 	}
 }
 
@@ -30,26 +38,24 @@ let Game = () => {
 /* Snake Module */
 let Snake = (snakeElement) => {
 	let movement = 'up';
+	let foodObj = {}
+	let score = 0;
 	let snakeObject = { 
 		name: 'snake',
 		x: 10, 
 		y: 15, 
 		headPosition: 'up',
 		tails: [
-			{ name: 's0', x: 10, y: 16, parent:'snake' ,direction:'up' },
-			{name: 's1', x: 10, y: 17, parent: 's0', direction: 'up'},
-			{name: 's2', x: 10, y: 18, parent: 's1', direction: 'up'},
-			{name: 's3', x: 10, y: 19, parent: 's2', direction: 'up'}
+			{name: 's0', x: 10, y: 16},
+			{name: 's1', x: 10, y: 17},
+			{name: 's2', x: 10, y: 18},
+			{name: 's3', x: 10, y: 19}
 		]
 	}  
 
 	function applyMovement() {
 		snakeElement.style.gridRow = (snakeObject.y);
 		snakeElement.style.gridColumn = (snakeObject.x);
-		snakeObject.tails.forEach(tail => {
-			document.querySelector('.' + tail.name).style.gridRow = tail.y;
-			document.querySelector('.' + tail.name).style.gridColumn = tail.x;
-		})
 	}
 
 	function orientHead() {
@@ -89,86 +95,100 @@ let Snake = (snakeElement) => {
 			break;
 		}
 	}
-	function moveTail(tail,parentTail) {
-		switch(movement) {
-			case 'up':
-			if(tail.x == parentTail.x)
-				tail.y = parentTail.y +1;
-				if(tail.y > 20)
-					tail.y = 1;
-				else if(tail.y==0)
-					tail.y = 20;
-			if(tail.x > parentTail.x)
-					tail.x--;
-			else if(tail.x < parentTail.x)
-					tail.x++;
 
+	function popTail() {
+		const tail = snakeObject.tails.pop();
+		let tailElement = document.querySelector('.' + tail.name);
+		tailElement.parentNode.removeChild(tailElement);
+		return tail;
+	}
+	function pushTail() {
+		const parentTail = snakeObject.tails[snakeObject.tails.length-1]
+		const tail = {name: 's'+new Date().getTime(), x: parentTail.x, y: parentTail.y}
+		snakeObject.tails.push(tail)
+		snakeElement.insertAdjacentHTML("afterend", `<div class="snake-tail ${tail.name}" style="grid-column:${tail.x}; grid-row:${tail.y}"></div>`);
+	}
+	function unshiftTail(tail) {
+		switch (movement) {
+			case 'up':
+				tail.x = snakeObject.x;
+				tail.y = snakeObject.y+1
+				snakeObject.tails.unshift(tail)
 			break;
 			case 'down':
-			if(tail.x == parentTail.x)
-				tail.y = parentTail.y -1;
-			if(tail.y == 0)
-				tail.y = 20;
-			else if(tail.y > 20)
-				tail.y = 1
-			if(tail.x > parentTail.x)
-					tail.x--;
-			else if(tail.x < parentTail.x)
-					tail.x++;
-
+				tail.x = snakeObject.x;
+				tail.y = snakeObject.y-1
+				snakeObject.tails.unshift(tail)
 			break;
 			case 'left':
-				if(tail.y == parentTail.y)
-					tail.x = parentTail.x + 1;
-				if(tail.x >20)
-					tail.x = 1;
-				else if(tail.x == 0)
-					tail.x = 20
-				if(tail.y > parentTail.y + 15)
-					tail.y = parentTail.y  - 1;
-				else if(tail.y < parentTail.y - 15)
-					tail.y = parentTail.y + 1;
-				else if(tail.y > parentTail.y)
-					tail.y--;
-				else if(tail.y < parentTail.y)
-					tail.y++;
+				tail.y = snakeObject.y;
+				tail.x = snakeObject.x+1
+				snakeObject.tails.unshift(tail)
 			break;
 			case 'right':
-				if(tail.y == parentTail.y)
-					tail.x = parentTail.x -1;
-				if(tail.x == 0)
-					tail.x = 20;
-				else if(tail.x > 20)
-					tail.x =0;
-				if(tail.y > parentTail.y)
-					tail.y--;
-				else if(tail.y < parentTail.y)
-					tail.y++;
+				tail.y = snakeObject.y;
+				tail.x = snakeObject.x -1;
+				snakeObject.tails.unshift(tail)
 			break;
 		}
+		snakeElement.insertAdjacentHTML("afterend", `<div class="snake-tail ${tail.name}" style="grid-column:${tail.x}; grid-row:${tail.y}"></div>`);
+	}
+ 	function moveTail() {
+		let tail = popTail();
+		unshiftTail(tail);			
 	}
 	function move() {
 		snakeObject.headPosition = movement;
 		orientHead()
 		moveHead()
-		snakeObject.tails.forEach((tail,index) => {
-			if(tail.parent == 'snake' ) {
-					moveTail(snakeObject.tails[index],snakeObject);
-			} else {
-					moveTail(snakeObject.tails[index], snakeObject.tails[index - 1])
-			}
-		})
+		moveTail();
 		applyMovement();
+		checkIntersection();
+	}
+	function checkIntersection() {
+		let food = document.querySelector('.food')
+		let scoreElement = document.querySelector('.score-val') 
+		if(food) {
+			if(snakeObject.x == foodObj.x && snakeObject.y == foodObj.y){
+				food.parentNode.removeChild(food);
+				score++;
+				pushTail()
+			}
+		}
+		scoreElement.innerText = score;
+
+
+		snakeObject.tails.forEach(tail => {
+			if(snakeObject.x == tail.x && snakeObject.y == tail.y){
+				//alert('Game Over');
+				//location.reload()		
+			}
+
+		})
+
+	}	
+
+	function snakeDash() {
+		for(i=0;i<5;i++)
+			move();
 	}
 
-	function addTail() {
-
+	function putFood(food) {
+		let oldfood = document.querySelector('.food')
+		if(oldfood)
+			oldfood.parentNode.removeChild(oldfood);
+		let	xmin = 1, xmax=20, ymin=1, ymax= 20;
+		let xrand = Math.floor(Math.random() * (xmax - xmin)) + xmin
+		let yrand = Math.floor(Math.random() * (ymax - ymin)) +ymin
+		foodObj = { x: xrand,y:yrand }
+		snakeElement.insertAdjacentHTML("afterend", `<p class="food" style="grid-column:${xrand}; grid-row:${yrand}"></p>`);
 	}
- 
 	return {
 		move,
-		addTail,
-		setMovementPosition
+		setMovementPosition,
+		putFood,
+		snakeDash,
+		score
 	}
 
 	

@@ -21,48 +21,32 @@ let snake = Snake(snakeElement);
 document.addEventListener('keydown',function(event){
 	if(event.code == 'ArrowUp') {
 		snake.setMovementPosition('up')
-	snake.move();
 	}
 	if(event.code == 'ArrowDown') {
 		snake.setMovementPosition('down')
-	snake.move();
 	}
 	if(event.code == 'ArrowRight') {
 		snake.setMovementPosition('right')
-	snake.move();
 	}
 	if(event.code == 'ArrowLeft') {
 		snake.setMovementPosition('left')
-		snake.move();
 	}
 })
-
+document.addEventListener('keyup',function(event){
+	if(event.code == 'Space')
+		snake.snakeDash()
+})
+let scoreNow = 0;
 let game = Game();
 game.startGame(function(){
-		//snake.move();
-	
+	snake.move();
+	score = parseInt(document.querySelector('.score-val').innerText);
+	if(score>0 && score % 5 == 0 && score !==scoreNow && score != 50)
+	{
+		scoreNow = score;
+		game.upSpeed(5);
+	}
 })
-
-// let app = (function(snake){
-// 	/* Config  */
-// 	moves = {x: 20, y:20 };
-// 	currentPos = {x: 10, y: 15};
-// 	tails = [{x: 10, y:16,positioned:'top',orientation:'up'},{x:10,y:17,positioned:'top',orientation:'up'}]  
-
-// 	function moveUp() {
-// 		--currentPos.y;
-// 		if(currentPos.y == 0)
-// 			currentPos.y = 20;
-// 		snake.style.gridRow = (currentPos.y);
-// 		orientPosition(snake,'up');
-// 		tails.forEach(tail => {
-// 			tail.y--;
-// 			if(tail.y ==0)
-// 				tail.y = 20
-// 			if(tail.x > currentPos.x)
-// 				tail.x--;
-// 			else if(tail.x < currentPos.x)
-// 				tail.x++;
-// 		})
-// 		applyTails();
-// 	}
+game.gameTimer(function() {
+	snake.putFood();
+})
