@@ -1,4 +1,4 @@
-#Basic snake game
+# Basic snake game
 
 This is a basic snake game that doesn't use canvas. It's build with HTML, CSS and vanilla JavaScript.
 
