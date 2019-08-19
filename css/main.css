@@ -1,0 +1,142 @@
+*,
+*::after,
+*::before {
+	margin:0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	font-size:62.5%;
+	height:100%;
+	width:100%;
+	background: black;
+	font-family: cursive;
+}
+body {
+	padding-top:5rem;
+}
+.main-header {
+	width:90%;
+	margin:auto;
+	padding:5rem;
+	text-align: center;
+	color:white;
+}
+.main-header--title {
+	font-size:5rem;
+}
+.main-header--sub {
+	font-size:2.5rem;
+	opacity:0.5;
+}
+
+/* Play button */
+.play,
+.play::after {
+	position: absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	border-radius:0.8rem;
+	color:grey;
+}
+.play {
+	padding:1rem 2rem;
+	background: orange;
+	border-color:orange;
+	outline-color:orange;
+	width:15rem;
+	height:5rem;
+	outline: none;
+	font-size:1.5rem;
+	letter-spacing: 0.5rem;
+}
+.play::after{
+	content: "";
+	width:15rem;
+	height: 5rem;
+	background: orange;
+	opacity:1;
+	z-index:-1;
+	transition:all 0.5s;
+	transform-origin: 150% 150%;
+}
+.play:hover::after{
+	transform: scale(1.5);
+	opacity: 0;
+}
+
+#app {
+	width:50rem;
+	height: 50rem;
+	margin:auto;
+	background:white;
+	display:grid;
+	grid-template-rows:repeat(20,1fr);
+	grid-template-columns:repeat(20,1fr);
+	position: relative;
+	display:none;
+	opacity:0;
+	transition:all 1s ease-out;
+}
+.score {
+	position: absolute;
+	top:0;
+	right:0;
+	font-size: 2rem;
+	opacity: 0.5;
+}
+.snake {
+	grid-column: 10;
+	grid-row: 15;	
+	height:100%;
+	background: blue;
+	width: 100%;
+	position: relative;
+	border-radius: 20%
+}
+.snake::after {
+	content: "^.^";
+	font-size:10px;
+	color:blue;
+	font-weight: bold;
+	text-align: center;
+	position:absolute;
+	z-index:9999;
+	top:40%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	width:90%;
+	height: 50%;
+	background:white;
+	border-radius:10px;
+}
+.snake-right {
+	transform: rotate(90deg);
+}
+.snake-left {
+	transform: rotate(-90deg);
+}
+.snake-down {
+	transform: rotate(180deg);
+}
+.snake-up {
+	transform: rotate(0deg);
+}
+.snake-tail {
+	margin-top:0.3rem;
+	height:100%;
+	background: blue;
+	width: 100%;
+	border-radius: 50%;
+}
+.s0 {
+	grid-column: 10;
+	grid-row:16;
+}
+.s1 {
+	grid-column: 10;
+	grid-row:17;
+}

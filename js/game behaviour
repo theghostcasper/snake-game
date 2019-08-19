@@ -1,0 +1,20 @@
+
+
+
+
+
+
+
+
+
+1) Snake CSS is done.
+2) Snake head should appear on screen.
+3) When we press up arrow, snake keeps moving up.
+4) when we press right arrow, snake keeps moving right, and so on.
+5) if a body part intersects with the snake head, score resets to 0. and game is reset.
+6) Game is reset by removing all the snake parts leaving only the head.
+7) okay, now while the snake moves, his body parts move with the snake, they shouldn't intersect with the snake head on their own, neither they should be faster.
+8) while the snake moves in a direction, and all his body parts are in another direction, his body parts shifts their direction like a snake movement.
+9) There should be food that appears every one second that increases the snake score and allows him to grow, there should be a timer so that the snake should eat this food.
+10) There should be also fragments for increasing the snake's score as he moves without increasing his body size.
+11) Finally, there should be a leader board and write your name on it.
