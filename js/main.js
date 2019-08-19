@@ -26,13 +26,13 @@
 			if(event.code == 'ArrowUp') {
 				snake.setMovementPosition('up')
 			}
-			if(event.code == 'ArrowDown') {
+			else if(event.code == 'ArrowDown') {
 				snake.setMovementPosition('down')
 			}
-			if(event.code == 'ArrowRight') {
+			else if(event.code == 'ArrowRight') {
 				snake.setMovementPosition('right')
 			}
-			if(event.code == 'ArrowLeft') {
+			else if(event.code == 'ArrowLeft') {
 				snake.setMovementPosition('left')
 			}
 		})
