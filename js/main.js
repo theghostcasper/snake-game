@@ -23,21 +23,21 @@
 
 		/* Button event listener */
 		document.addEventListener('keydown',function(event){
-			if(event.code == 'ArrowUp') {
+			if(event.keyCode == 38) {
 				snake.setMovementPosition('up')
 			}
-			else if(event.code == 'ArrowDown') {
+			else if(event.keyCode == 40) {
 				snake.setMovementPosition('down')
 			}
-			else if(event.code == 'ArrowRight') {
+			else if(event.keyCode == 39) {
 				snake.setMovementPosition('right')
 			}
-			else if(event.code == 'ArrowLeft') {
+			else if(event.keyCode == 37) {
 				snake.setMovementPosition('left')
 			}
 		})
 		document.addEventListener('keyup',function(event){
-			if(event.code == 'Space')
+			if(event.keyCode == 32)
 				snake.snakeDash()
 		})
 
